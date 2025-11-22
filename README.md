@@ -37,7 +37,7 @@ fishery-risk-platform/
 
 
     PhaseDurationKey DeliverablesResume Impact
-    0: Setup2 daysProject structure, environmentFoundation
+    0: Setup 2 days Project structure, environment Foundation
     1: Data5 daysSynthetic database, validationStatistical simulation
     2: Simulation7 daysMonte Carlo engine, PML calculatorCore modeling skills
     3: API7 daysFastAPI backend, 8+ endpointsBackend development

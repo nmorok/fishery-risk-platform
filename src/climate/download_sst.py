@@ -39,7 +39,7 @@ regions = {
 
 # Year range to download
 START_YEAR = 1982
-END_YEAR = 1983
+END_YEAR = 2024
 
 # ============================================================================
 # PROCESS EACH REGION
@@ -139,6 +139,7 @@ for region_key, region_info in regions.items():
         
         ds_sample.close()
     
+    
     # ========================================================================
     # DOWNLOAD DATA YEAR-BY-YEAR
     # ========================================================================
@@ -226,6 +227,8 @@ for region_key, region_info in regions.items():
                 # Clean up
                 ds_year.close()
                 ds_year_masked.close()
+                time.sleep(5)  # brief pause to be polite to server
+
                 
             except Exception as e:
                 print(f"    ✗ Error downloading {year}: {e}")
