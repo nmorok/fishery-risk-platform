@@ -511,7 +511,7 @@ if __name__ == "__main__":
     # Install tqdm if needed: pip install tqdm --break-system-packages
     
     # TEST MODE - Run on 5 random locations first
-    #main(test_mode=True, n_test_points=5)
+    main(test_mode=True, n_test_points=5)
     
     # Once test passes, run full analysis by uncommenting:
-    main(test_mode=False)
+    #main(test_mode=False)

@@ -37,6 +37,32 @@ regions = {
     }
 }
 
+def get_region_bounds_with_dateline(gdf_wgs84, region_key):
+    """
+    Get proper bounds for regions that may cross the dateline.
+    """
+    bounds = gdf_wgs84.total_bounds
+    lon_min, lat_min, lon_max, lat_max = [float(x) for x in bounds]
+    
+    # For Alaska, use the full global longitude range to capture dateline crossing
+    if region_key == 'alaska':
+        print("  ⚠️  Alaska crosses dateline - using full longitude range")
+        return {
+            'lat_min': lat_min,
+            'lat_max': lat_max,
+            'lon_min': -180.0,  # Full range
+            'lon_max': 180.0,   # Full range
+            'crosses_dateline': False  # Download as single request
+        }
+    else:
+        return {
+            'lat_min': lat_min,
+            'lat_max': lat_max,
+            'lon_min': lon_min,
+            'lon_max': lon_max,
+            'crosses_dateline': False
+        }
+    
 # Year range to download
 START_YEAR = 1982
 END_YEAR = 2024
@@ -58,13 +84,24 @@ for region_key, region_info in regions.items():
     gdf_wgs84 = gdf.to_crs('EPSG:4326')
     print(f"✓ Loaded {len(gdf_wgs84)} features")
     
-    # Get bounds
-    bounds = gdf_wgs84.total_bounds
-    lon_min, lat_min, lon_max, lat_max = [float(x) for x in bounds]
+    # ============================================================
+    # CHANGE #1: Use the function instead of direct bounds
+    # ============================================================
+    # OLD CODE (delete these lines):
+    # bounds = gdf_wgs84.total_bounds
+    # lon_min, lat_min, lon_max, lat_max = [float(x) for x in bounds]
+    
+    # NEW CODE:
+    region_bounds = get_region_bounds_with_dateline(gdf_wgs84, region_key)
+    
+    lon_min = region_bounds['lon_min']
+    lon_max = region_bounds['lon_max']
+    lat_min = region_bounds['lat_min']
+    lat_max = region_bounds['lat_max']
     
     print(f"Bounds:")
-    print(f"  Longitude: {lon_min:.2f}° to {lon_max:.2f}°")
-    print(f"  Latitude:  {lat_min:.2f}° to {lat_max:.2f}°")
+    print(f"  Longitude: {region_bounds['lon_min']:.2f}° to {region_bounds['lon_max']:.2f}°")
+    print(f"  Latitude:  {region_bounds['lat_min']:.2f}° to {region_bounds['lat_max']:.2f}°")
     
     # Calculate area
     gdf_meters = gdf_wgs84.to_crs('EPSG:3857')

@@ -1,60 +1,166 @@
-from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+import pandas as pd
+import sqlite3
+from pathlib import Path
+import numpy as np
 
-Base = declarative_base()
+DB_PATH = 'data/fishery_disasters.db'
+CSV_DIR = Path('data/csv')
 
-class Disaster(Base):
-    __tablename__ = 'disasters'
-    
-    disaster_id = Column(Integer, primary_key=True)
-    year = Column(Integer, nullable=False)
-    month = Column(Integer, nullable=False)
-    region = Column(String(50), nullable=False)
-    fishery = Column(String(100), nullable=False)
-    species = Column(String(50), nullable=False)
-    disaster_type = Column(String(50), nullable=False)
-    duration_years = Column(Integer, nullable=False)
-    loss_usd = Column(Float, nullable=False)
-    
-    # Relationship
-    heatwave = relationship("Heatwave", back_populates="disaster", uselist=False)
+def create_tables():
+    # Create connection
+    conn = sqlite3.connect(DB_PATH)
 
-class Heatwave(Base):
-    __tablename__ = 'heatwaves'
-    
-    heatwave_id = Column(Integer, primary_key=True)
-    disaster_id = Column(Integer, ForeignKey('disasters.disaster_id'))
-    cumulative_intensity = Column(Float)
-    peak_intensity = Column(Float)
-    duration_days = Column(Integer)
-    max_extent_km2 = Column(Float)
-    
-    # Relationship
-    disaster = relationship("Disaster", back_populates="heatwave")
+    # Read and execute SQL file
+    with open(f"{CSV_DIR}/create_tables.sql", 'r') as f:
+        sql_script = f.read()
 
-class SpeciesRegion(Base):
-    __tablename__ = 'species_regions'
-    
-    id = Column(Integer, primary_key=True)
-    region = Column(String(50), nullable=False)
-    species = Column(String(50), nullable=False)
-    annual_value_usd = Column(Float)
-    vulnerability_factor = Column(Float)
+    conn.executescript(sql_script)
+    conn.commit()
+    conn.close()
+    print('Database tables created successfully.')
 
-    def initialize_database(db_path='data/fishery_disasters.db'):
-    """
-    Create SQLite database and load synthetic data
-    """
-    engine = create_engine(f'sqlite:///{db_path}')
-    Base.metadata.create_all(engine)
+
+def load_data():
+    conn = sqlite3.connect(DB_PATH)
+    print('Loading data into database...')
+
+    tables = [
+        'disasters',
+        'disaster_relationships',
+        'disaster_years',
+        'species',
+        'fishery_events',
+        'event_disasters',
+        'event_species',
+        'event_years'
+    ]
+
+    for table in tables:
+        csv_file = f"{CSV_DIR}/{table}.csv"
+        
+        if not csv_file.exists():
+            print(f"CSV file for table '{table}' not found at {csv_file}. Skipping.")
+            continue
+
+        df = pd.read_csv(csv_file)
+
+        df = df.replace({pd.NA: None})  # Replace pandas NA with None for SQL compatibility
+
+        df.to_sql(table, conn, if_exists='append', index=False)
+        print(f"Loaded data into table '{table}' from '{csv_file}'.")
+
+    conn.commit()
+
+    # quick verification
+    cursor = conn.cursor()
+    for table in tables:
+        cursor = conn.execute(f"SELECT COUNT(*) FROM {table}")
+        count = cursor.fetchone()[0]
+        print(f"Table '{table}' has {count} records.")
+
+    conn.close()
+    print('Data loading complete.')
+
+def load_specific_table(table_name):
+    conn = sqlite3.connect(DB_PATH)
+    print(f'Loading data into table {table_name}...')
+
+    csv_file = f"{CSV_DIR}/{table_name}.csv"
     
-    # Load synthetic data
-    disasters_df = pd.read_csv('data/synthetic/disasters.csv')
-    heatwaves_df = pd.read_csv('data/synthetic/heatwaves.csv')
-    species_regions_df = pd.read_csv('data/synthetic/species_regions.csv')
+    if not csv_file.exists():
+        print(f"CSV file for table '{table_name}' not found at {csv_file}.")
+        return
+
+    df = pd.read_csv(csv_file)
+
+    df = df.replace({pd.NA: None})  # Replace pandas NA with None for SQL compatibility
+
+    df.to_sql(table_name, conn, if_exists='append', index=False)
+    print(f"Loaded data into table '{table_name}' from '{csv_file}'.")
+
+    conn.commit()
+
+    # quick verification
+    cursor = conn.execute(f"SELECT COUNT(*) FROM {table_name}")
+    count = cursor.fetchone()[0]
+    print(f"Table '{table_name}' has {count} records.")
+
+    conn.close()
+    print(f'Data loading for table {table_name} complete.')    .
+
+def create_csv():
+    output_file = 'model_data.csv'
     
-    # Write to database
-    disasters_df.to_sql('disasters', engine, if_exists='replace', index=False)
-    heatwaves_df.to_sql('heatwaves', engine, if_exists='replace', index=False)
-    species_regions_df.to_sql('species_regions', engine, if_exists='replace', index=False)
+    conn = sqlite3.connect(DB_PATH)
+    query = '''
+    SELECT 
+        -- Event identifiers
+        fe.event_id, -- int
+        fe.fishery_name, -- text
+        fe.management_zone, -- text
+        fe.sst_region, -- text
+        
+        -- Event characteristics
+        fe.num_fisheries, -- int
+        fe.num_species, -- int
+        fe.num_years, -- int
+        fe.total_value, -- float
+        fe.appropriation, -- float
+        fe.sst_year, -- int
+        
+        -- Heatwave metrics
+        hm.max_sst_anomaly, -- float
+        hm.duration_days, -- int
+        hm.cumulative_intensity, -- float
+        hm.mean_intensity, -- float
+        hm.percent_in_heatwave, -- float
+        
+        -- Aggregated disaster info
+        GROUP_CONCAT(DISTINCT ed.disaster_id) as disaster_ids, -- text
+        COUNT(DISTINCT ed.disaster_id) as num_disasters, -- int
+        
+        -- Aggregated species info
+        GROUP_CONCAT(DISTINCT s.species_name) as species_names, -- text
+        GROUP_CONCAT(DISTINCT s.species_family) as species_families, -- text
+        
+        -- Year info
+        MIN(ey.year) as first_year,
+        MAX(ey.year) as last_year,
+        GROUP_CONCAT(DISTINCT ey.year ORDER BY ey.year) as years
+        
+    FROM fishery_events fe
+    LEFT JOIN heatwave_metrics hm ON fe.event_id = hm.event_id
+    LEFT JOIN event_disasters ed ON fe.event_id = ed.event_id
+    LEFT JOIN event_species es ON fe.event_id = es.event_id
+    LEFT JOIN species s ON es.species_id = s.species_id
+    LEFT JOIN event_years ey ON fe.event_id = ey.event_id
+    
+    GROUP BY fe.event_id
+    ORDER BY fe.event_id
+    '''
+
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+
+    # clean df
+ 
+    
+    # Create categorical variables for modeling
+    df['zone_category'] = pd.Categorical(df['management_zone'])
+    df['species_category'] = pd.Categorical(df['species_families'])
+    df['year'] = pd.Categorical(df['sst_year'])
+
+    
+    # Log transform economic variables (common for $ amounts)
+    df['log_appropriation'] = np.log(df['appropriation'] + 1)  # +1 to handle zeros
+    df['log_total_value'] = np.log(df['total_value'] + 1)
+    
+    df.to_csv(output_file, index=False)
+    print(f'Model data CSV created at {output_file}.')
+
+
+if __name__ == "__main__":
+    create_tables() # to create tables
+    load_data()  # to load all tables
+    # load_specific_table('{table_name}')  # to load a specific table
+    create_csv()  # to create csv files from database

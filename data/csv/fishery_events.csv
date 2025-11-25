@@ -1,0 +1,39 @@
+event_id,management_zone,sst_region,fishery_name,num_fisheries,num_species,num_years,total_value,appropriation,sst_year
+1,West_coast,West coast,West Coast Salmon,3,2,4,74743831,61092570,1992
+2,Alaska,Alaska,"Bristol Bay Salmon, Kuskokwim River, Yukon River Salmon, Norton Sound",4,5,4,824751476,152896270,1997
+3,West_coast,"Washington, BC","Fraser River Sockeye, Lummi",2,1,1,14463782,0,1999
+4,West_coast,"Washington, BC","Fraser River Sockeye, Lummi",2,1,1,9537585,0,2001
+5,West_coast,West coast,"Washington, Oregon, California Ocean Troll",3,2,3,36950000,252505270,2008
+6,West_coast,"Washington, BC",Fraser River Sockeye (with tribes),6,1,3,5631750,3004190,2007
+7,West_coast,"Washington, BC",Fraser River Sockeye (with tribes),9,1,2,5680000,6351190,2013
+8,West_coast,"Washington, BC","Willapa Bay, Grays Harbor, Queets River",3,1,1,2123994,19193010,2015
+9,West_coast,California,California Dungeness and Rock Crab,2,2,1,97929007,33896710,2015
+10,West_coast,"Washington, BC",Tribal Puget Sound,4,3,1,3225641,17794540,2015
+11,West_coast,Washington,Quileute Tribe Dungeness Crab,1,1,1,11850000,1946240,2015
+12,West_coast,"Washington, BC",Washington Ocean Salmon Troll,1,1,1,605913,1096370,2016
+13,Alaska,Alaska,Gulf of Alaska Pink,6,1,1,147165180,74056830,2016
+14,West_coast,"Washington, BC",Tribal Coho and Pink,7,2,1,2146295,4873970,2015
+15,West_coast,West coast,"Oregon, yurok, hoopa, and California Klamath Chinook",4,1,2,30334766,19070310,2016
+16,West_coast,"Washington, BC",Makah Troll Coho and Chinook,1,2,1,3318034,2090650,2016
+17,Alaska,Cod,Gulf of Alaska Cod,1,1,1,126114455,30343030,2018
+18,Alaska,Alaska,Chignik Sockeye Salmon,1,1,1,61815746,12804440,2018
+19,West_coast,"Washington, BC",Chehalis Chinook,1,1,1,36557,180471,2019
+20,Atlantic,Peconic estuary,New York Scallop,1,1,1,901118,935920,2019
+21,West_coast,"Washington, BC",Lummi Salmon,1,4,4,5605585,12333300,2015
+22,West_coast,"Washington, BC",Muckleshoot,1,4,2,3148433,1263690,2017
+23,West_coast,"Washington, BC","Washington Columbia River, Willapa Bay, Puget Sound",3,2,1,9708946,4046840,2019
+24,West_coast,"Washington, BC",Washington Ocean Troll,1,4,1,13554469,3718300,2020
+25,Alaska,Alaska,"Upper Cook Inlet east side setnet, Upper cook inlet salmon fisheries",2,5,2,36722578,10684290,2018
+26,Alaska,Alaska,Copper River and PWS,2,5,2,65085955,53929576,2018
+27,Alaska,Tanner Crab,Bering Sea Tanner Crab,1,1,1,89760000,14695180,2019
+28,Alaska,Cod,Gulf of Alaska Pacific Cod,1,1,1,86741209,20190700,2020
+29,Alaska,Alaska,"Norton Sound, Yukon river, Chignik, Kuskokwim, Southeast",5,5,3,105997223,65767690,2020
+30,West_coast,West Coast,Oregon Salmon Fisheries,1,1,3,9845864,7312220,2018
+31,West_coast,"Washington, BC",Squaxin Island Tribe Puget Sound Chum,1,1,1,,,2023
+32,West_coast,"Washington, BC",Port Gamble S'Klallam,1,3,3,370758,1356678,2019
+33,Alaska,Alaska,Upper Cook Inlet East Side Setnet,1,1,3,11580000,11699070,2021
+34,Alaska,"Red King Crab, Snow Crab","Bristol Bay Red King Crab, Bering Sea Snow Crab",2,2,3,221944000,162782790,2021
+35,Alaska,Snow Crab,Bering Sea Snow Crab,1,1,9,60935156,18605360,2000
+36,West_coast,California,California Red Sea Urchin,1,1,4,3470883,5837540,2016
+37,Alaska,Red King Crab Norton soun,Norton Sound Red King Crab,1,1,1,3360000,4702560,2019
+38,West_coast,"Washington, BC",Squaxin Island Tribe Chum,1,1,2,498121,657110,2019
