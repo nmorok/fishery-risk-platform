@@ -36,10 +36,12 @@ fishery-risk-platform/
     └── exploratory_analysis.ipynb
 
 
-    PhaseDurationKey DeliverablesResume Impact
-    0: Setup 2 days Project structure, environment Foundation
-    1: Data5 daysSynthetic database, validationStatistical simulation
-    2: Simulation7 daysMonte Carlo engine, PML calculatorCore modeling skills
-    3: API7 daysFastAPI backend, 8+ endpointsBackend development
-    4: Frontend7 daysStreamlit dashboard, visualizationsFull-stack capability
-    5: Deploy2 daysDocker, cloud deploymentProduction skills
+To do:
+- finish adding metadata to the notes section. actually, might just drop it. Or add the title from NOAA website. 
+- Combine washington and bc so that I can get the heatwaves for those regions
+- build out the model 
+- build out the monte carlo simulation
+- build out the stan model -- might need to switch to r for that. 
+- build out the dashboard 
+- clean up the metadata
+- write up a report for Andre
