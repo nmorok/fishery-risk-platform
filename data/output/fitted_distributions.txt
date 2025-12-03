@@ -1,0 +1,28 @@
+FITTED DISTRIBUTIONS FOR MONTE CARLO SIMULATION
+================================================================================
+
+log_total_value:
+  Distribution: norm
+  Parameters: (np.float64(16.367638459649104), np.float64(2.1066418639036235))
+  Mean: 16.368
+  Std: 2.107
+
+peak_intensity:
+  Distribution: weibull_min
+  Parameters: (np.float64(1.2522677115530114), np.float64(4.009744311809456), np.float64(2.245126038962205))
+  Mean: 6.100
+  Std: 1.680
+
+duration_days:
+  Distribution: gamma
+  Parameters: (0.5837859698889669, 0, np.float64(885267.0784436528))
+  Mean: 516806.500
+  Std: 676396.171
+
+percent_in_heatwave:
+  Distribution: beta
+  Parameters: (np.float64(69.51850013999058), np.float64(0.6740834355002778), np.float64(-8.748269056457504), np.float64(9.748269056457506))
+  Mean: 90.638
+  Std: 11.267
+  Scale: 100.0
+

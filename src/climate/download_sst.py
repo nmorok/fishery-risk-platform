@@ -34,6 +34,11 @@ regions = {
         'name': 'West Coast EEZ',
         'shapefile': 'src/climate/shapefiles/WestCoast_EEZ.shp',
         'output_dir': 'src/climate/sst_data/west_coast'
+    },
+    'Peconic': {
+        'name': 'Peconic Estuary',
+        'shapefile': 'src/climate/shapefiles/Peconic_Estuary_Program_Boundary.shp',
+        'output_dir': 'src/climate/sst_data/peconic'
     }
 }
 
