@@ -39,5 +39,15 @@
     "mean": 90.63840314598099,
     "std": 11.267457462503156,
     "scale": 100.0
+  },
+  "disaster_frequency": {
+    "distribution": "zt_poisson",
+    "params": {
+      "lambda": 2.3711864670447738
+    },
+    "mean": 2.6153846153846323,
+    "var": 1.9767125351111519,
+    "empirical_mean": 2.6153846153846154,
+    "empirical_var": 4.0828402366863905
   }
 }

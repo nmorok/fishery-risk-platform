@@ -108,11 +108,11 @@ shapefile_dict = {
             'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
             'csv_output_path': 'data/csv/alaska_mhw_events_norton_sound_rkk_filtered.csv'
         },
-        'bering sea red king crab': {
-            'mask': 'src/climate/output_masks/bering_sea_redking_crab_spatial_mask.nc',
-            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
-            'csv_output_path': 'data/csv/alaska_mhw_events_bering_sea_redking_crab_filtered.csv'
-        },
+        #'bering sea red king crab': {
+        #    'mask': 'src/climate/output_masks/beringsea_redking_crab_spatial_mask.nc',
+        #    'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+        #    'csv_output_path': 'data/csv/alaska_mhw_events_bering_sea_redking_crab_filtered.csv'
+        #},
         'Peconic estuary': {
             'mask': 'src/climate/output_masks/peconic_estuary_spatial_mask.nc',
             'sst_data_path': 'src/climate/sst_data/peconic_bay/peconic_bay_mhw_events.csv',
@@ -130,7 +130,8 @@ def get_heatwave_metrics(event_id, region, EVENT_START, EVENT_END, USED_START=1,
     
     # Get base path and add event_id before extension
     base_path = Path(shapefile_dict[region]['csv_output_path'])
-    CSV_OUTPUT_PATH = str(base_path.with_stem(f"{base_path.stem}_event_{event_id}"))
+    #CSV_OUTPUT_PATH = str(base_path.with_stem(f"{base_path.stem}_event_{event_id}")) # for specific events
+    CSV_OUTPUT_PATH = base_path# for the whole spatial mask and time frame. 
 
 
     LAT_COLUMN = "latitude"
@@ -309,38 +310,91 @@ def summary_statistics(df, mask_ds, region):
 # Example usage:
 # not 90 right now.
 if __name__ == "__main__":
-    event_id = 38
-    metadata_df = get_sst_metadata_for_event(event_id)
+    event_id = 0
+    #metadata_df = get_sst_metadata_for_event(event_id)
     print("SST Metadata for Event ID", event_id)
-    print(metadata_df)
+    #print(metadata_df)
 
-    region = metadata_df.loc[0, 'shapefile']
+    #region = metadata_df.loc[0, 'shapefile']
     
     # Get heatwave metrics
-    df = get_heatwave_metrics(
-        event_id=event_id,
-        region=region,
-        EVENT_START=metadata_df.loc[0, 'fishery_start'],
-        EVENT_END=metadata_df.loc[0, 'fishery_end'],
-        USED_START=metadata_df.loc[0, 'used_start']
-    )
+    #df = get_heatwave_metrics(
+    #    event_id=event_id,
+    #    region=region,
+    #    EVENT_START=metadata_df.loc[0, 'fishery_start'],
+    #    EVENT_END=metadata_df.loc[0, 'fishery_end'],
+    #    USED_START=metadata_df.loc[0, 'used_start']
+    #)
     
     # Load mask for summary statistics
-    mask_ds = xr.open_dataset(shapefile_dict[region]['mask'])
+    #mask_ds = xr.open_dataset(shapefile_dict[region]['mask'])
     
     # Calculate summary statistics
-    summary = summary_statistics(df, mask_ds, region)
+    #summary = summary_statistics(df, mask_ds, region)
     
-    print("\n=== SUMMARY STATISTICS ===")
-    for key, value in summary.items():
-        print(f"{key}: {value}")
+    #print("\n=== SUMMARY STATISTICS ===")
+    #for key, value in summary.items():
+    #    print(f"{key}: {value}")
     
     
     # Save summary to SQL
-    conn = sqlite3.connect('data/fishery_disasters.db')
-    summary_df = pd.DataFrame([summary])
-    summary_df['event_id'] = event_id
-    summary_df.to_sql('heatwave_metrics', conn, if_exists='append', index=False)
-    conn.close()
+    #conn = sqlite3.connect('data/fishery_disasters.db')
+    #summary_df = pd.DataFrame([summary])
+    #summary_df['event_id'] = event_id
+    #summary_df.to_sql('heatwave_metrics', conn, if_exists='append', index=False)
+    #conn.close()
     
-    mask_ds.close()
+    #mask_ds.close()
+
+    get_heatwave_metrics(
+        event_id=1,
+        region = 'Washington',
+        EVENT_START='2024-12-31',
+        EVENT_END='2024-12-31'
+    )
+    
+        'California': {
+            'mask': 'src/climate/output_masks/california_eez_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/west_coast/west_coast_mhw_events.csv',
+            'csv_output_path': 'data/csv/west_coast_mhw_events_california_eez_filtered.csv'
+        },
+        'BC': {
+            'mask': 'src/climate/sst_data/bc/spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/bc/bc_mhw_events.csv',
+            'csv_output_path': 'data/csv/bc_mhw_events_bc_eez_filtered.csv'
+        },
+        'Washington_BC': {
+            'mask': 'src/climate/output_masks/washington_bc_eez_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/washington_bc/west_coast_bc_mhw_events.csv',
+            'csv_output_path': 'data/csv/west_coast_bc_mhw_events_washington_bc_eez_filtered.csv'
+        },
+        'West_Coast': {
+            'mask': 'src/climate/sst_data/west_coast/spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/west_coast/west_coast_mhw_events.csv',
+            'csv_output_path': 'data/csv/west_coast_mhw_events_west_coast_eez_filtered.csv'
+        },
+        'Tanner_Crab': {
+            'mask': 'src/climate/output_masks/tanner_crab_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+            'csv_output_path': 'data/csv/alaska_mhw_events_tanner_crab_filtered.csv'
+        },
+        'Cod': {
+            'mask': 'src/climate/output_masks/pcod_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+            'csv_output_path': 'data/csv/alaska_mhw_events_pcod_filtered.csv'
+        },
+        'Snow_Crab': {
+            'mask': 'src/climate/output_masks/snow_crab_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+            'csv_output_path': 'data/csv/alaska_mhw_events_snow_crab_filtered.csv'
+        },
+        'RKK_SC': {
+            'mask': 'src/climate/output_masks/snowcrab_rockcrab_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+            'csv_output_path': 'data/csv/alaska_mhw_events_rkk_sc_filtered.csv'
+        },
+        'Norton_Sound_RKK': {
+            'mask': 'src/climate/output_masks/norton_sound_red_king_crab_spatial_mask.nc',
+            'sst_data_path': 'src/climate/sst_data/alaska/alaska_mhw_events.csv',
+            'csv_output_path': 'data/csv/alaska_mhw_events_norton_sound_rkk_filtered.csv'
+        },

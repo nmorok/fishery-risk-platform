@@ -19,7 +19,7 @@ MASK_FILE = "src/climate/output_masks/washington_bc_eez_spatial_mask.nc"
 SHAPEFILE_PATH = "src/climate/shapefiles/Washington_BC_EEZ.shp"
 
 # Output filename for the plot (set to None to just display)
-OUTPUT_PLOT = "src/climate/output_masks/washington_bc_eez_mask_plot.png"
+#OUTPUT_PLOT = "src/climate/output_masks/washington_bc_eez_mask_plot.png"
 
 # ============================================================================
 # LOAD DATA
